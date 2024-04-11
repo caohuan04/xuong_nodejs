@@ -6,9 +6,9 @@ const categoriesRouter = Router();
 const categoriesController = new CategoriesController();
 
 categoriesRouter.get("/", categoriesController.getAllCategories)
-categoriesRouter.post("/", categoriesController.getCategoriesDetail)
-categoriesRouter.get("/:id", categoriesController.createCategories)
-categoriesRouter.put("/:id", categoriesController.updateCategories)
-categoriesRouter.delete("/:id", categoriesController.deleteCategories)
+categoriesRouter.post("/", checkPermision, categoriesController.createCategories)
+categoriesRouter.get("/:id", categoriesController.getCategoriesDetail)
+categoriesRouter.put("/:id", checkPermision, categoriesController.updateCategories)
+categoriesRouter.delete("/:id", checkPermision, categoriesController.deleteCategories)
 
 export default categoriesRouter

@@ -16,7 +16,7 @@ const MovidesSchema = new Schema({
         type: String,
     },
     genres: {
-        type: [Schema.Types.ObjectId],
+        type: Schema.Types.ObjectId,
         ref: 'Genre',
         require: true,
     },
@@ -49,3 +49,4 @@ const MovidesSchema = new Schema({
 
 const Movie = mongoose.model("Movie", MovidesSchema);
 export default Movie;
+

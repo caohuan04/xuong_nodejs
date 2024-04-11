@@ -6,27 +6,31 @@ class MoviesController {
     // GET /movies
     async getAllMovies(req, res) {
         try {
-            const movies = await Movie.find().populate(["category", "genres"]);
+            const movies = await Movie.find().populate("category").populate("genres");
             res.status(StatusCodes.OK).json({
                 message: "Get All Movies Done",
                 data: movies
             });
         } catch (error) {
-            next(error);
+            res.status(400).json({
+                message: error.message
+            });
         }
     }
 
     // GET /movies/:id
     async getMoviesDetail(req, res) {
         try {
-            const movie = await Movie.findById(req.params.id).populate(["category", "genres"]);
+            const movie = await Movie.findById(req.params.id).populate("category").populate("genres");
             if (!movie) throw new ApiError(404, "Movie not found")
             res.status(StatusCodes.OK).json({
                 message: "Get Movies Detail Done",
                 data: movie
             });
         } catch (error) {
-            next(error);
+            res.status(400).json({
+                message: error.message
+            });
         }
     }
 
@@ -37,12 +41,14 @@ class MoviesController {
                 ...req.body,
                 user: res.locals.id
             });
-            res.status(StatusCodes.CREATE).json({
+            res.status(StatusCodes.CREATED).json({
                 message: "Create Movies Successfull",
                 data: newMovie
             });
         } catch (error) {
-            next(error);
+            res.status(400).json({
+                message: error.message
+            });
         }
     }
 
@@ -57,7 +63,9 @@ class MoviesController {
                 data: updateMovies
             });
         } catch (error) {
-            next(error);
+            res.status(400).json({
+                message: error.message
+            });
         }
     }
 
@@ -72,7 +80,9 @@ class MoviesController {
                 data: movie
             });
         } catch (error) {
-            next(error);
+            res.status(400).json({
+                message: error.message
+            });
         }
     }
 }

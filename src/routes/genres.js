@@ -6,9 +6,9 @@ const genreRouter = Router();
 const genreController = new GenresController();
 
 genreRouter.get("/", genreController.getAllGenres)
-genreRouter.post("/", genreController.getGenresDetail)
-genreRouter.get("/:id", genreController.createGenres)
-genreRouter.put("/:id", genreController.updateGenres)
-genreRouter.delete("/:id", genreController.deleteGenres)
+genreRouter.post("/", checkPermision, genreController.createGenres)
+genreRouter.get("/:id", genreController.getGenresDetail)
+genreRouter.put("/:id", checkPermision, genreController.updateGenres)
+genreRouter.delete("/:id", checkPermision, genreController.deleteGenres)
 
 export default genreRouter

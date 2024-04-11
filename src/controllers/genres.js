@@ -38,17 +38,17 @@ class GenresController {
     // POST /Genres
     async createGenres(req, res) {
         const newGenre = await Genre.create(req.body);
-        const saveGenre = await newGenre.save();
         res.status(200).json({
             message: "Create Done ",
-            data: saveGenre
+            data: newGenre
         });
+        
     }
 
     // PUT /Genres
-    async updateGenres(req, res) { 
+    async updateGenres(req, res) {
         try {
-            const genre = await Genre.findByIdAndUpdate(req.params.id, req.body, {new: true});
+            const genre = await Genre.findByIdAndUpdate(req.params.id, req.body, { new: true });
             if (!genre) {
                 return res.status(404).json({
                     message: "Not found",

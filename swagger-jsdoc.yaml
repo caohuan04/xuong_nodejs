@@ -1,0 +1,385 @@
+openapi: 3.0.3
+info:
+  title: Swagger productsstore - OpenAPI 3.0
+  description: |-
+    This is a sample products Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the products store, we've switched to the design first approach!
+    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
+    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
+
+    _If you're looking for the Swagger 2.0/OAS 2.0 version of productsstore, then click [here](https://editor.swagger.io/?url=https://productsstore.swagger.io/v2/swagger.yaml). Alternatively, you can load via the `Edit > Load productsstore OAS 2.0` menu option!_
+
+    Some useful links:
+    - [The products Store repository](https://github.com/swagger-api/swagger-productsstore)
+    - [The source API definition for the products Store](https://github.com/swagger-api/swagger-productsstore/blob/master/src/main/resources/openapi.yaml)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: huanhcph35218@fpt.edu.vn
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8000/
+tags:
+  - name: products
+    description: Tất cả về products
+    externalDocs:
+      description: Tìm hiểu thêm
+      url: http://localhost:8000/products
+  - name: user
+    description: Operations about user
+paths:
+  /products:
+    get:
+      tags:
+        - products
+      summary: Get All Products
+      operationId: findAllProducts
+      requestBody:
+        description: Get All Products
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/products"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/products"
+        "400":
+          description: Invalid status value
+    post:
+      tags:
+        - products
+      summary: Thêm sản phẩm mới
+      description: Thêm mới Products
+      operationId: addproducts
+      requestBody:
+        description: Create a new products in the store
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/products"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/products"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/products"
+        "400":
+          description: Invalid input
+        "422":
+          description: Validation exception
+  /products/{id}:
+    get:
+      tags:
+        - products
+      summary: Find products by ID
+      description: Returns a single products
+      operationId: getproductsById
+      parameters:
+        - name: productsId
+          in: path
+          description: ID of products to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/products"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/products"
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: products not found
+      security:
+        - api_key: []
+        - productsstore_auth:
+            - write:productss
+            - read:productss
+    put:
+      tags:
+        - products
+      summary: Cập nhập Products
+      description: Cập nhập vào hệ thống
+      operationId: updateproducts
+      requestBody:
+        description: Cập nhập sản phẩm hiện có
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/products"
+        required: true
+      responses:
+        "200":
+          description: Cập nhập thành công
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/products"
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: products not found
+        "422":
+          description: Validation exception
+    delete:
+      tags:
+        - products
+      summary: Deletes a products
+      description: delete a products
+      operationId: deleteproducts
+      parameters:
+        - name: api_key
+          in: header
+          description: ""
+          required: false
+          schema:
+            type: string
+        - name: productsId
+          in: path
+          description: products id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "400":
+          description: Invalid products value
+      security:
+        - productsstore_auth:
+            - write:productss
+            - read:productss
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/User"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/User"
+  /user/login:
+    get:
+      tags:
+        - user
+      summary: Logs user into the system
+      description: ""
+      operationId: loginUser
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Invalid username/password supplied
+  /user/logout:
+    get:
+      tags:
+        - user
+      summary: Logs out current logged in user session
+      description: ""
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+components:
+  schemas:
+    products:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6607860d63a687b85fbfe28e
+        name:
+          type: string
+          example: Hoàng Cao Huân
+        image:
+          type: string
+          example: huanhcph3528
+        price:
+          type: string
+          example: 1
+        description:
+          type: string
+          example: 1234
+        rate:
+          type: string
+          example: "1"
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 660b7fe44bbddcd22f576d0d
+        username:
+          type: string
+          example: huan
+        email:
+          type: string
+          example: huanhcph@fpt.edu.vn
+        password:
+          type: string
+          example: "1234"
+        avatar:
+          type: string
+          example: "không có gì cả"
+        role:
+          type: string
+          example: admin
+        createdAt:
+          type: string
+          example: 2024-04-02T03:47:48.102Z
+        updatedAt:
+          type: string
+          example: 2024-04-02T03:47:48.102Z
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        productsId:
+          type: integer
+          format: int64
+          example: 198772
+        quantity:
+          type: integer
+          format: int32
+          example: 7
+        shipDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          description: Order Status
+          example: approved
+          enum:
+            - placed
+            - approved
+            - delivered
+        complete:
+          type: boolean
+      xml:
+        name: order
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 100000
+        username:
+          type: string
+          example: fehguy
+        address:
+          type: array
+          xml:
+            name: addresses
+            wrapped: true
+          items:
+            $ref: "#/components/schemas/Address"
+      xml:
+        name: customer
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+          example: 437 Lytton
+        city:
+          type: string
+          example: Palo Alto
+        state:
+          type: string
+          example: CA
+        zip:
+          type: string
+          example: "94301"
+      xml:
+        name: address
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Dogs
+      xml:
+        name: category
